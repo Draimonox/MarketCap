@@ -1,101 +1,108 @@
+"use client";
+
+// 1 . shows the same things as it for the coins, dw about anything above the list
+// 2 . then i want filtering for price, marketcap, and alphabetical
+// 3 . and when you click on a coin, it should open a modal that shows more details (whatever else the API provides)
+import { Box } from "@mantine/core";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+function MarketCap() {
+  const [data, setData] = useState<CoinData[]>([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  interface CoinData {
+    id: string;
+    name: string;
+    symbol: string;
+    image: string;
+    current_price: number;
+    high_24h: number;
+    low_24h: number;
+    market_cap: number;
+    market_cap_change_24h: number;
+    market_cap_change_percentage_24h: number;
+    market_cap_rank: number;
+    fully_diluted_valuation: number;
+    total_volume: number;
+    circulating_supply: number;
+    total_supply: number;
+    max_supply: number | null;
+    ath: number;
+    ath_change_percentage: number;
+    ath_date: string;
+    atl: number;
+    atl_change_percentage: number;
+    atl_date: string;
+    price_change_24h: number;
+    price_change_percentage_24h: number;
+    roi: {
+      currency: string;
+      percentage: number;
+      times: number;
+    } | null;
+    last_updated: string;
+  }
+
+  async function coinAPI() {
+    try {
+      const response = await fetch(
+        "https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd"
+      );
+
+      const data = await response.json();
+      console.log(data);
+      setData(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  useEffect(() => {
+    coinAPI();
+  }, []);
+
+  return (
+    <>
+      <ul>
+        {data.map((coin) => (
+          <Box
+            key={coin.id}
+            c="black"
+            bd="1px"
+            bg="red.5"
+            my="xl"
+            component="a"
+            href="/"
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+            <li
+              key={coin.id}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "10px",
+              }}
+            >
+              <span className="coinName" style={{ marginRight: "10px" }}>
+                {coin.name}
+              </span>
+
+              <Image
+                src={coin.image}
+                alt={coin.name}
+                width={20}
+                height={20}
+                style={{ marginRight: "5px" }}
+                className="coinImage"
+              />
+              <span className="coinSymbol" style={{ marginRight: "10px" }}>
+                {coin.symbol}
+              </span>
+            </li>
+          </Box>
+        ))}
+      </ul>
+    </>
   );
 }
+
+export default MarketCap;
