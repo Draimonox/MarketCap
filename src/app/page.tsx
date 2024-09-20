@@ -63,24 +63,32 @@ function MarketCap() {
 
   return (
     <>
+      <h1>COIN MARKET CAP</h1>
       <ul>
         {data.map((coin) => (
-          <Box
+          <li
             key={coin.id}
-            c="black"
-            bd="1px"
-            bg="red.5"
-            my="xl"
-            component="a"
-            href="/"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "-5px",
+            }}
           >
-            <li
+            <div
               key={coin.id}
               style={{
+                borderStyle: "solid",
+                borderColor: "black",
+                borderWidth: "2px",
+                width: "100%",
+                margin: "25px",
                 display: "flex",
                 alignItems: "center",
-                marginBottom: "10px",
+                padding: "10px",
+                borderRadius: "25px",
+                cursor: "pointer",
               }}
+              onClick={() => {}}
             >
               <span className="coinName" style={{ marginRight: "10px" }}>
                 {coin.name}
@@ -91,14 +99,17 @@ function MarketCap() {
                 alt={coin.name}
                 width={20}
                 height={20}
-                style={{ marginRight: "5px" }}
+                style={{ marginLeft: "1%" }}
                 className="coinImage"
               />
-              <span className="coinSymbol" style={{ marginRight: "10px" }}>
+              <span className="coinSymbol" style={{}}>
                 {coin.symbol}
               </span>
-            </li>
-          </Box>
+              <span className="coinPrice" style={{ marginLeft: "15%" }}>
+                Current Price: {coin.current_price}
+              </span>
+            </div>
+          </li>
         ))}
       </ul>
     </>
