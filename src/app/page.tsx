@@ -118,6 +118,7 @@ function MarketCap() {
           borderRadius: "25px",
           cursor: "pointer",
           fontWeight: "bolder",
+          color: "white",
         }}
       >
         <h3 onClick={() => handleSort("market_cap_rank")}>Rank</h3>
@@ -134,7 +135,7 @@ function MarketCap() {
         {sortProperty === "current_price" &&
           (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
         <h3
-          style={{ marginLeft: "140px", cursor: "pointer" }}
+          style={{ marginLeft: "100px", cursor: "pointer", width: "110px" }}
           onClick={() => handleSort("price_change_percentage_24h")}
         >
           24h % Change
@@ -142,7 +143,7 @@ function MarketCap() {
         {sortProperty === "price_change_percentage_24h" &&
           (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
         <h3
-          style={{ marginLeft: "120px", cursor: "pointer" }}
+          style={{ marginLeft: "50px", cursor: "pointer" }}
           onClick={() => handleSort("total_volume")}
         >
           Total Volume(24h)
@@ -150,7 +151,7 @@ function MarketCap() {
         {sortProperty === "total_volume" &&
           (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
         <h3
-          style={{ marginLeft: "75px", cursor: "pointer" }}
+          style={{ marginLeft: "65px", cursor: "pointer", width: "150px" }}
           onClick={() => handleSort("circulating_supply")}
         >
           Circulating Supply
@@ -160,7 +161,7 @@ function MarketCap() {
         <Button
           size="xs"
           color="gray"
-          style={{ marginLeft: "75px", cursor: "pointer" }}
+          style={{ marginLeft: "70px", cursor: "pointer" }}
           onClick={handleReset}
         >
           Reset Filters
@@ -175,6 +176,7 @@ function MarketCap() {
               display: "flex",
               alignItems: "center",
               marginBottom: "-35px",
+              color: "white",
             }}
           >
             <div
@@ -190,6 +192,7 @@ function MarketCap() {
                 padding: "10px",
                 borderRadius: "15px",
                 cursor: "pointer",
+                color: "white",
                 background:
                   "linear-gradient(to bottom, rgb(83, 120, 149) 1%,  rgb(9, 32, 63) 75%)",
               }}
@@ -254,12 +257,12 @@ function MarketCap() {
                   textAlign: "center",
                 }}
               >
-                ${coin.price_change_percentage_24h.toLocaleString()}
+                {coin.price_change_percentage_24h.toLocaleString()}%
               </span>
               <span
                 style={{
                   width: "100px",
-                  marginLeft: "100px",
+                  marginLeft: "75px",
                   textAlign: "center",
                 }}
               >
