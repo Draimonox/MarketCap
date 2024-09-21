@@ -104,10 +104,24 @@ function MarketCap() {
           cursor: "pointer",
           fontWeight: "bolder",
           textAlign: "center",
+          color: "white",
         }}
       >
         Crypto Market Cap
       </h1>
+      <Button
+        size="xs"
+        color="gray"
+        style={{
+          margin: "-25px",
+          cursor: "pointer",
+          float: "right",
+          marginRight: "25px",
+        }}
+        onClick={handleReset}
+      >
+        Reset Filters
+      </Button>
       <div
         style={{
           margin: "25px",
@@ -124,10 +138,10 @@ function MarketCap() {
         <h3 onClick={() => handleSort("market_cap_rank")}>Rank</h3>
         {sortProperty === "market_cap_rank" &&
           (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
-        <h3 style={{ marginLeft: "130px" }}>Name</h3>
+        <h3 style={{ marginLeft: "40px" }}>Name</h3>
         <h3 style={{ marginLeft: "130px" }}>Symbol</h3>
         <h3
-          style={{ marginLeft: "115px", cursor: "pointer" }}
+          style={{ marginLeft: "110px", cursor: "pointer", width: "120px" }}
           onClick={() => handleSort("current_price")}
         >
           Current Price
@@ -135,15 +149,15 @@ function MarketCap() {
         {sortProperty === "current_price" &&
           (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
         <h3
-          style={{ marginLeft: "100px", cursor: "pointer", width: "110px" }}
+          style={{ marginLeft: "90px", cursor: "pointer", width: "50px" }}
           onClick={() => handleSort("price_change_percentage_24h")}
         >
-          24h % Change
+          24h %
         </h3>
         {sortProperty === "price_change_percentage_24h" &&
           (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
         <h3
-          style={{ marginLeft: "50px", cursor: "pointer" }}
+          style={{ marginLeft: "100px", cursor: "pointer", width: "150px" }}
           onClick={() => handleSort("total_volume")}
         >
           Total Volume(24h)
@@ -151,21 +165,26 @@ function MarketCap() {
         {sortProperty === "total_volume" &&
           (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
         <h3
-          style={{ marginLeft: "65px", cursor: "pointer", width: "150px" }}
+          style={{
+            marginLeft: "60px",
+            cursor: "pointer",
+            width: "145px",
+            marginRight: "20px",
+          }}
           onClick={() => handleSort("circulating_supply")}
         >
           Circulating Supply
         </h3>
         {sortProperty === "circulating_supply" &&
           (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
-        <Button
-          size="xs"
-          color="gray"
-          style={{ marginLeft: "70px", cursor: "pointer" }}
-          onClick={handleReset}
+        <h3
+          style={{ marginLeft: "125px", cursor: "pointer", width: "100px" }}
+          onClick={() => handleSort("market_cap")}
         >
-          Reset Filters
-        </Button>
+          Market Cap
+        </h3>
+        {sortProperty === "market_cap" &&
+          (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
       </div>
 
       <ul>
@@ -192,16 +211,13 @@ function MarketCap() {
                 padding: "10px",
                 borderRadius: "15px",
                 cursor: "pointer",
-                color: "white",
-                background:
-                  "linear-gradient(to bottom, rgb(83, 120, 149) 1%,  rgb(9, 32, 63) 75%)",
               }}
               onClick={() => handleOpenModal(coin.id)}
             >
               <span
                 style={{
-                  marginRight: "140px",
-                  marginLeft: "10px",
+                  marginRight: "25px",
+                  width: "50px",
                   textAlign: "center",
                 }}
               >
@@ -255,14 +271,15 @@ function MarketCap() {
                   width: "100px",
                   marginLeft: "100px",
                   textAlign: "center",
+                  color: coin.price_change_24h >= 0 ? "green" : "red",
                 }}
               >
-                {coin.price_change_percentage_24h.toLocaleString()}%
+                {coin.price_change_24h.toLocaleString()}%
               </span>
               <span
                 style={{
                   width: "100px",
-                  marginLeft: "75px",
+                  marginLeft: "100px",
                   textAlign: "center",
                 }}
               >
@@ -270,12 +287,25 @@ function MarketCap() {
               </span>
               <span
                 style={{
+                  width: "175px",
                   marginLeft: "100px",
                   textAlign: "center",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
                 }}
               >
                 {coin.circulating_supply.toLocaleString()}{" "}
                 {coin.symbol.toUpperCase()}
+              </span>
+              <span
+                style={{
+                  width: "150px",
+                  marginLeft: "100px",
+                  textAlign: "center",
+                }}
+              >
+                ${coin.market_cap.toLocaleString()}
               </span>
             </div>
           </li>
