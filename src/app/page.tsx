@@ -137,7 +137,7 @@ function MarketCap() {
           style={{ marginLeft: "140px", cursor: "pointer" }}
           onClick={() => handleSort("high_24h")}
         >
-          24h
+          24h High
         </h3>
         {sortProperty === "high_24h" &&
           (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
