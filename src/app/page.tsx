@@ -211,6 +211,8 @@ function MarketCap() {
                 padding: "10px",
                 borderRadius: "15px",
                 cursor: "pointer",
+                background:
+                  "linear-gradient(90deg,rgb(63, 76, 119) 11.4%, rgb(32, 38, 57) 70.2%)",
               }}
               onClick={() => handleOpenModal(coin.id)}
             >
