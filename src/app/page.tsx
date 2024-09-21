@@ -135,11 +135,11 @@ function MarketCap() {
           (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
         <h3
           style={{ marginLeft: "140px", cursor: "pointer" }}
-          onClick={() => handleSort("high_24h")}
+          onClick={() => handleSort("price_change_percentage_24h")}
         >
-          24h High
+          24h % Change
         </h3>
-        {sortProperty === "high_24h" &&
+        {sortProperty === "price_change_percentage_24h" &&
           (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
         <h3
           style={{ marginLeft: "120px", cursor: "pointer" }}
@@ -254,7 +254,7 @@ function MarketCap() {
                   textAlign: "center",
                 }}
               >
-                ${coin.high_24h.toLocaleString()}
+                ${coin.price_change_percentage_24h.toLocaleString()}
               </span>
               <span
                 style={{
