@@ -5,14 +5,17 @@
 // 3 . and when you click on a coin, it should open a modal that shows more details (whatever else the API provides)
 // import { Box } from "@mantine/core";
 import { useEffect, useState } from "react";
+import "./globals.css";
 import Image from "next/image";
 // import { useDisclosure } from "@mantine/hooks";
-import { Modal } from "@mantine/core";
+import { Modal, Button } from "@mantine/core";
+import { MdOutlineArrowDropDown, MdOutlineArrowDropUp } from "react-icons/md";
 
 function MarketCap() {
   const [data, setData] = useState<CoinData[]>([]);
   const [openedCoinId, setOpenedCoinId] = useState<string | null>(null);
   const [ascending, setAscending] = useState(true);
+  const [sortProperty, setSortProperty] = useState<keyof CoinData | null>(null);
 
   interface CoinData {
     id: string;
@@ -54,7 +57,6 @@ function MarketCap() {
       );
 
       const data = await response.json();
-      console.log(data);
       setData(data);
     } catch (err) {
       console.error(err);
@@ -73,48 +75,30 @@ function MarketCap() {
     setOpenedCoinId(null);
   };
 
-  function handleSortPrice() {
-    const sortData = [...data].sort((a, b) =>
-      ascending
-        ? a.current_price - b.current_price
-        : b.current_price - a.current_price
-    );
+  function handleSort(property: keyof CoinData) {
+    const sortData = [...data].sort((a, b) => {
+      const aValue = a[property] ?? 0;
+      const bValue = b[property] ?? 0;
+      return ascending
+        ? Number(aValue) - Number(bValue)
+        : Number(bValue) - Number(aValue);
+    });
     setData(sortData);
     setAscending(!ascending);
-  }
-  function handleSort24h() {
-    const sortData2 = [...data].sort((a, b) =>
-      ascending ? a.high_24h - b.high_24h : b.high_24h - a.high_24h
-    );
-    setData(sortData2);
-    setAscending(!ascending);
+    setSortProperty(property);
   }
 
-  function handleSortRank() {
-    const sortData = [...data].sort((a, b) =>
-      ascending
-        ? a.market_cap_rank - b.market_cap_rank
-        : b.market_cap_rank - a.market_cap_rank
-    );
-    setData(sortData);
-    setAscending(!ascending);
+  function handleReset() {
+    const resetData = [...data].sort((a, b) => b.market_cap - a.market_cap);
+    setData(resetData);
+    setSortProperty(null);
   }
 
-  function handleSortVolume() {
-    const sortData = [...data].sort((a, b) =>
-      ascending
-        ? a.total_volume - b.total_volume
-        : b.total_volume - a.total_volume
-    );
-    setData(sortData);
-    setAscending(!ascending);
-  }
   return (
     <>
       <h1
         style={{
           margin: "25px",
-
           padding: "10px",
           borderRadius: "25px",
           cursor: "pointer",
@@ -136,28 +120,51 @@ function MarketCap() {
           fontWeight: "bolder",
         }}
       >
-        {" "}
-        <h3 onClick={handleSortRank}>Rank</h3>
+        <h3 onClick={() => handleSort("market_cap_rank")}>Rank</h3>
+        {sortProperty === "market_cap_rank" &&
+          (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
         <h3 style={{ marginLeft: "130px" }}>Name</h3>
         <h3 style={{ marginLeft: "130px" }}>Symbol</h3>
         <h3
-          style={{ marginLeft: "115px", cursor: "point" }}
-          onClick={handleSortPrice}
+          style={{ marginLeft: "115px", cursor: "pointer" }}
+          onClick={() => handleSort("current_price")}
         >
           Current Price
         </h3>
+        {sortProperty === "current_price" &&
+          (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
         <h3
-          style={{ marginLeft: "130px", cursor: "point" }}
-          onClick={handleSort24h}
+          style={{ marginLeft: "140px", cursor: "pointer" }}
+          onClick={() => handleSort("high_24h")}
         >
           24h
         </h3>
+        {sortProperty === "high_24h" &&
+          (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
         <h3
-          style={{ marginLeft: "145px", cursor: "point" }}
-          onClick={handleSortVolume}
+          style={{ marginLeft: "120px", cursor: "pointer" }}
+          onClick={() => handleSort("total_volume")}
         >
-          Total Volume
+          Total Volume(24h)
         </h3>
+        {sortProperty === "total_volume" &&
+          (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
+        <h3
+          style={{ marginLeft: "75px", cursor: "pointer" }}
+          onClick={() => handleSort("circulating_supply")}
+        >
+          Circulating Supply
+        </h3>
+        {sortProperty === "circulating_supply" &&
+          (ascending ? <MdOutlineArrowDropDown /> : <MdOutlineArrowDropUp />)}
+        <Button
+          size="xs"
+          color="gray"
+          style={{ marginLeft: "75px", cursor: "pointer" }}
+          onClick={handleReset}
+        >
+          Reset Filters
+        </Button>
       </div>
 
       <ul>
@@ -183,7 +190,8 @@ function MarketCap() {
                 padding: "10px",
                 borderRadius: "15px",
                 cursor: "pointer",
-                // justifyContent: "space-between", // Use space-between to align items
+                background:
+                  "linear-gradient(to bottom, rgb(83, 120, 149) 1%,  rgb(9, 32, 63) 75%)",
               }}
               onClick={() => handleOpenModal(coin.id)}
             >
@@ -194,7 +202,7 @@ function MarketCap() {
                   textAlign: "center",
                 }}
               >
-                #{coin.market_cap_rank}
+                #{coin.market_cap_rank.toLocaleString()}
               </span>
               <span
                 className="coinName"
@@ -225,7 +233,7 @@ function MarketCap() {
                   textAlign: "center",
                 }}
               >
-                {coin.symbol.toUpperCase()}{" "}
+                {coin.symbol.toUpperCase()}
               </span>
 
               <span
@@ -236,7 +244,7 @@ function MarketCap() {
                   textAlign: "center",
                 }}
               >
-                ${coin.current_price}
+                ${coin.current_price.toLocaleString()}
               </span>
 
               <span
@@ -255,17 +263,16 @@ function MarketCap() {
                   textAlign: "center",
                 }}
               >
-                ${coin.market_cap}
+                ${coin.total_volume.toLocaleString()}
               </span>
               <span
                 style={{
-                  // width: "100px",
                   marginLeft: "100px",
                   textAlign: "center",
                 }}
               >
                 {coin.circulating_supply.toLocaleString()}{" "}
-                {coin.symbol.toLocaleUpperCase()}
+                {coin.symbol.toUpperCase()}
               </span>
             </div>
           </li>
@@ -274,12 +281,105 @@ function MarketCap() {
       {data.map((coin) => (
         <Modal
           opened={openedCoinId === coin.id}
+          styles={{
+            content: {
+              background:
+                "linear-gradient( to right, rgb(0, 40, 70) -4.8%, rgb(255, 115, 115) 82.7%, rgb(255, 175, 123) 97.2%)", // Change the background color
+              color: "white",
+              fontWeight: "bold", // Change the text color
+            },
+            header: {
+              background:
+                "linear-gradient( to right, rgb(0, 40, 70) -4.8%, rgb(255, 115, 115) 82.7%, rgb(255, 175, 123) 97.2%)", // Header background color
+              color: "white",
+            },
+            title: {
+              fontWeight: "bolder",
+            },
+          }}
           onClose={handleCloseModal}
-          title="Coin Details"
+          title="Coin Details:"
           key={coin.id}
         >
-          <div>
-            <h2>{coin.name}</h2>
+          <div style={{ color: "white" }}>
+            <h2
+              style={{ fontWeight: "bold", display: "flex", marginTop: "25px" }}
+            >
+              {coin.name}{" "}
+              <Image
+                style={{ marginLeft: "5px" }}
+                src={coin.image}
+                alt={coin.name}
+                width={25}
+                height={25}
+              />
+            </h2>
+
+            <p style={{ fontWeight: "bold" }}>Symbol: {coin.symbol}</p>
+            <p style={{ fontWeight: "bold" }}>
+              Current Rank: #{coin.market_cap_rank.toLocaleString()}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Current Price: ${coin.current_price.toLocaleString()}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Market Cap: ${coin.market_cap.toLocaleString()}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Price Change (24h): ${coin.price_change_24h.toLocaleString()}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Price Change % (24h):{" "}
+              {coin.price_change_percentage_24h.toLocaleString()}%
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              24h High: ${coin.high_24h.toLocaleString()}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              24h Low: ${coin.low_24h.toLocaleString()}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Total Volume: ${coin.total_volume.toLocaleString()}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Market Cap Change: ${coin.market_cap_change_24h.toLocaleString()}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Market Cap % Change:{" "}
+              {coin.market_cap_change_percentage_24h.toLocaleString()}%
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Circulating Supply: {coin.circulating_supply.toLocaleString()}{" "}
+              {coin.symbol.toUpperCase()}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Total Supply: {coin.total_supply.toLocaleString()}{" "}
+              {coin.symbol.toUpperCase()}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              Max Supply: {coin.max_supply?.toLocaleString()}{" "}
+              {coin.symbol.toUpperCase()}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              All-Time High: ${coin.ath.toLocaleString()}{" "}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              All-Time High % Change:{" "}
+              {coin.ath_change_percentage.toLocaleString()}%
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              All-Time High Date: {coin.ath_date}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              All-Time Low: ${coin.atl.toLocaleString()}{" "}
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              All-Time Low % Change:{" "}
+              {coin.atl_change_percentage.toLocaleString()}%
+            </p>
+            <p style={{ fontWeight: "bold" }}>
+              All-Time Low Date: {coin.atl_date}
+            </p>
           </div>
         </Modal>
       ))}
