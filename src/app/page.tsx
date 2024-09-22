@@ -10,6 +10,8 @@ import Image from "next/image";
 // import { useDisclosure } from "@mantine/hooks";
 import { Modal, Button } from "@mantine/core";
 import { MdOutlineArrowDropDown, MdOutlineArrowDropUp } from "react-icons/md";
+import { createChart } from "lightweight-charts";
+import CryptoChart from "./components/chart";
 
 function MarketCap() {
   const [data, setData] = useState<CoinData[]>([]);
@@ -415,6 +417,7 @@ function MarketCap() {
             <p style={{ fontWeight: "bold" }}>
               All-Time Low Date: {coin.atl_date}
             </p>
+            <CryptoChart key={coin.id} token={coin.id} />
           </div>
         </Modal>
       ))}
